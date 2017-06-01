@@ -33,6 +33,13 @@ func New() *Json {
 	}
 }
 
+// Wrap returns a pointer to a new `Json` object contain giving data
+func Wrap(data interface{}) *Json {
+	return &Json{
+		data: data,
+	}
+}
+
 // Interface returns the underlying data
 func (j *Json) Interface() interface{} {
 	return j.data
@@ -187,6 +194,18 @@ func (j *Json) Array() ([]interface{}, error) {
 	return nil, errors.New("type assertion to []interface{} failed")
 }
 
+// JsonArray type asserts to an `[]*Json`
+func (j *Json) JsonArray() ([]*Json, error) {
+	if a, ok := (j.data).([]interface{}); ok {
+		result := []*Json{}
+		for _, item := range a {
+			result = append(result, Wrap(item))
+		}
+		return result, nil
+	}
+	return nil, errors.New("type assertion to []*Json failed")
+}
+
 // Bool type asserts to `bool`
 func (j *Json) Bool() (bool, error) {
 	if s, ok := (j.data).(bool); ok {
@@ -250,6 +269,31 @@ func (j *Json) MustArray(args ...[]interface{}) []interface{} {
 	}
 
 	a, err := j.Array()
+	if err == nil {
+		return a
+	}
+
+	return def
+}
+
+// MustJsonArray guarantees the return of a `[]*Json` (with optional default)
+//
+// useful when you want to interate over array values in a succinct manner:
+//      for i, v := range js.Get("results").MustJsonArray() {
+//          fmt.Println(i, v.Get("business").MustString(""))
+//      }
+func (j *Json) MustJsonArray(args ...[]*Json) []*Json {
+	var def []*Json
+
+	switch len(args) {
+	case 0:
+	case 1:
+		def = args[0]
+	default:
+		log.Panicf("MustJsonArray() received too many arguments %d", len(args))
+	}
+
+	a, err := j.JsonArray()
 	if err == nil {
 		return a
 	}
