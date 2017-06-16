@@ -1,6 +1,7 @@
 package simplejson
 
 import (
+    "io/ioutil"
 	"encoding/json"
 	"errors"
 	"log"
@@ -24,6 +25,17 @@ func NewJson(body []byte) (*Json, error) {
 		return nil, err
 	}
 	return j, nil
+}
+
+// NewFromFile returns a pointer to a new `Json` object
+// after unmarshaling `filename` content
+func NewFromFile(filename string) (*Json, error) {
+    data, err := ioutil.ReadFile(filename)
+    if err != nil {
+        return nil, err
+    }
+
+    return NewJson(data)
 }
 
 // New returns a pointer to a new, empty `Json` object
