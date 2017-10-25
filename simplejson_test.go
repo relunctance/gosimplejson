@@ -181,11 +181,8 @@ func TestGetKeys(t *testing.T) {
     }`))
 	assert.Equal(t, nil, err)
 
-	js.Set("baz", "bing")
-
-	s, err := js.GetPath("baz").String()
-	assert.Equal(t, nil, err)
-	assert.Equal(t, "bing", s)
+    ret := []string{"key1", "key2", "key3"}
+    sliceEqual(t, ret, js.GetKeys())
 }
 
 func TestReplace(t *testing.T) {

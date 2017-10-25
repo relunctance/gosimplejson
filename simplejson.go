@@ -148,7 +148,7 @@ func (j *Json) Get(key string) *Json {
 // Get returns a []string
 // for `key` in its `map` representation
 // 对象必须是map类型，返回的map的keys
-func (j *Json) GetKeys(key string) []string {
+func (j *Json) GetKeys() []string {
     ret := make([]string, 0, 5)
 	m, err := j.Map()
 	if err == nil {
