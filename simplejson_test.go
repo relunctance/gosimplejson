@@ -160,6 +160,34 @@ func TestSet(t *testing.T) {
 	assert.Equal(t, "bing", s)
 }
 
+func sliceEqual(t *testing.T, s1, s2 []string) {
+    assert.Equal(t, len(s1), len(s2))
+    tmp := make(map[string]bool)
+    for  _, val := range s2 {
+        tmp[val] = true
+    }
+
+    for _, val := range s1 {
+        _, ok := tmp[val]
+        assert.Equal(t, ok, true)
+    }
+}
+
+func TestGetKeys(t *testing.T) {
+	js, err := NewJson([]byte(`{
+        "key1" : "val1",
+        "key2" : "val2",
+        "key3" : "val3"
+    }`))
+	assert.Equal(t, nil, err)
+
+	js.Set("baz", "bing")
+
+	s, err := js.GetPath("baz").String()
+	assert.Equal(t, nil, err)
+	assert.Equal(t, "bing", s)
+}
+
 func TestReplace(t *testing.T) {
 	js, err := NewJson([]byte(`{}`))
 	assert.Equal(t, nil, err)

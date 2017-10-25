@@ -145,6 +145,20 @@ func (j *Json) Get(key string) *Json {
 	return &Json{nil}
 }
 
+// Get returns a []string
+// for `key` in its `map` representation
+// 对象必须是map类型，返回的map的keys
+func (j *Json) GetKeys(key string) []string {
+    ret := make([]string, 0, 5)
+	m, err := j.Map()
+	if err == nil {
+        for k, _ := range m {
+            ret = append(ret, k)
+        }
+	}
+	return ret
+}
+
 // GetPath searches for the item as specified by the branch
 // without the need to deep dive using Get()'s.
 //
